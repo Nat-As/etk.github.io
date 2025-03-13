@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Toolkit (ETK)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --base03: #002b36;
+            --base02: #073642;
+            --base01: #586e75;
+            --base00: #657b83;
+            --base0: #839496;
+            --base1: #93a1a1;
+            --base2: #eee8d5;
+            --base3: #fdf6e3;
+            --yellow: #b58900;
+            --orange: #cb4b16;
+            --red: #dc322f;
+            --magenta: #d33682;
+            --violet: #6c71c4;
+            --blue: #268bd2;
+            --cyan: #2aa198;
+            --green: #859900;
+        }
+
+        body {
+            background-color: var(--base03);
+            color: var(--base1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background-color: var(--base02);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .navbar-brand {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .card {
+            background-color: var(--base02);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: var(--base02);
+            border-bottom: 2px solid var(--blue);
+            color: var(--blue);
+            font-weight: bold;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--base03);
+            border: 1px solid var(--base01);
+            color: var(--base1);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--base03);
+            border-color: var(--blue);
+            color: var(--base1);
+            box-shadow: 0 0 0 0.25rem rgba(38, 139, 210, 0.25);
+        }
+
+        .btn-primary {
+            background-color: var(--blue);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--violet);
+        }
+
+        table {
+            background-color: var(--base02);
+            color: var(--base1);
+            border-radius: 5px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        th {
+            background-color: var(--base02);
+            color: var(--yellow);
+            font-weight: normal;
+            border-bottom: 1px solid var(--base01) !important;
+        }
+
+        td {
+            border-color: var(--base01) !important;
+        }
+
+        .highlight {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .info-icon {
+            color: var(--blue);
+            cursor: help;
+        }
+
+        .temperature-adjustment {
+            color: var(--orange);
+        }
+
+        footer {
+            background-color: var(--base02);
+            color: var(--base00);
+            font-size: 0.8rem;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .section-title {
+            color: var(--yellow);
+            border-bottom: 1px solid var(--base01);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* Table hover effect */
+        tbody tr:hover {
+            background-color: rgba(38, 139, 210, 0.1);
+        }
+
+        /* Input group styling */
+        .input-group-text {
+            background-color: var(--base02);
+            color: var(--blue);
+            border: 1px solid var(--base01);
+        }
+
+        .result-row {
+            transition: background-color 0.3s;
+        }
+        
+        .updated {
+            background-color: rgba(133, 153, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-lightning-charge-fill me-2"></i>
+                Engineering Toolkit (ETK)
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="section-title">Enter Parameters</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="current" class="form-label">Current (Amperes)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="current" placeholder="Enter current" step="0.1" min="0">
+                                    <span class="input-group-text">A</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="temperature" class="form-label">Ambient Temperature (°C)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="temperature" value="25" step="1">
+                                    <span class="input-group-text">°C</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="temperatureRise" class="form-label">Max Temperature Rise (°C)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="temperatureRise" value="30" step="1">
+                                    <span class="input-group-text">°C</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-primary" id="calculate">Calculate Requirements</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Wiring Section -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-lightning"></i> Wire Sizing Requirements</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Standard</th>
+                                        <th>Min. AWG</th>
+                                        <th>Current Rating</th>
+                                        <th>Additional Info</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wireResults">
+                                    <tr>
+                                        <td>NEC (NFPA 70)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NASA (MIL-STD-975)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>UL 758</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h6 class="section-title mt-4">Wire Properties</h6>
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>AWG</th>
+                                        <th>Diameter (mm)</th>
+                                        <th>Area (mm²)</th>
+                                        <th>Resistance (Ω/km)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wireProperties">
+                                    <!-- Will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PCB Section -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-cpu"></i> PCB Trace Requirements</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Layer Type</th>
+                                        <th>Min. Width (mil)</th>
+                                        <th>Min. Width (mm)</th>
+                                        <th>Cross-sectional Area</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pcbResults">
+                                    <tr>
+                                        <td>External (Uncoated)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>External (Coated)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Internal</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h6 class="section-title mt-4">PCB Design Guidelines</h6>
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Recommended Value</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Component Lead Spacing</td>
+                                        <td id="leadSpacing">—</td>
+                                        <td>Based on voltage & current</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Copper Thickness</td>
+                                        <td>1 oz/ft² (35 μm)</td>
+                                        <td>Standard thickness</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Min. Spacing (High Current)</td>
+                                        <td id="highCurrentSpacing">—</td>
+                                        <td>For traces carrying > 1A</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Info Section -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-info-circle"></i> Helpful Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="section-title">Wire Selection Tips</h6>
+                                <ul>
+                                    <li>Always consider the environment (temperature, moisture, mechanical stress)</li>
+                                    <li>For long runs, voltage drop becomes significant (consider upsizing)</li>
+                                    <li>For aerospace/defense, use derating factors (typically 50%)</li>
+                                    <li>Stranded wire is preferred for applications with movement or vibration</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="section-title">PCB Design Tips</h6>
+                                <ul>
+                                    <li>Always consider thermal management for high current traces</li>
+                                    <li>Use thermal relief connections to large copper areas</li>
+                                    <li>For critical signals, apply controlled impedance design rules</li>
+                                    <li>Consider EMI/EMC requirements when routing power and signal traces</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <p>Engineering Toolkit (ETK) - For reference purposes only. Always verify against current standards.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wire gauge data
+            const wireData = [
+                { awg: 0, diameter: 8.252, area: 53.5, resistance: 0.321 },
+                { awg: 1, diameter: 7.348, area: 42.4, resistance: 0.404 },
+                { awg: 2, diameter: 6.544, area: 33.6, resistance: 0.509 },
+                { awg: 4, diameter: 5.189, area: 21.2, resistance: 0.809 },
+                { awg: 6, diameter: 4.115, area: 13.3, resistance: 1.29 },
+                { awg: 8, diameter: 3.264, area: 8.37, resistance: 2.05 },
+                { awg: 10, diameter: 2.588, area: 5.26, resistance: 3.25 },
+                { awg: 12, diameter: 2.053, area: 3.31, resistance: 5.18 },
+                { awg: 14, diameter: 1.628, area: 2.08, resistance: 8.24 },
+                { awg: 16, diameter: 1.291, area: 1.31, resistance: 13.1 },
+                { awg: 18, diameter: 1.024, area: 0.823, resistance: 20.8 },
+                { awg: 20, diameter: 0.812, area: 0.518, resistance: 33.0 },
+                { awg: 22, diameter: 0.644, area: 0.326, resistance: 52.5 },
+                { awg: 24, diameter: 0.511, area: 0.205, resistance: 83.5 },
+                { awg: 26, diameter: 0.405, area: 0.129, resistance: 133 },
+                { awg: 28, diameter: 0.321, area: 0.0810, resistance: 211 },
+                { awg: 30, diameter: 0.255, area: 0.0509, resistance: 335 }
+            ];
+
+            // NEC current ratings (for copper wire in free air at 30°C, per NEC Table 310.15(B)(17))
+            const necRatings = {
+                0: 150, 1: 130, 2: 115, 4: 95, 6: 75, 8: 55, 10: 40, 
+                12: 30, 14: 25, 16: 18, 18: 16, 20: 11, 22: 7, 24: 3.5,
+                26: 2.2, 28: 1.4, 30: 0.9
+            };
+
+            // NASA MIL-STD-975 ratings (conservative space-rated values)
+            const nasaRatings = {
+                0: 80, 1: 70, 2: 62, 4: 46, 6: 37, 8: 30, 10: 21, 
+                12: 15, 14: 10.5, 16: 7.5, 18: 5, 20: 3.5, 22: 2.5, 24: 1.7,
+                26: 1.2, 28: 0.8, 30: 0.5
+            };
+
+            // UL 758 ratings (appliance wiring material)
+            const ulRatings = {
+                0: 125, 1: 110, 2: 95, 4: 70, 6: 55, 8: 40, 10: 30, 
+                12: 20, 14: 15, 16: 10, 18: 7, 20: 5, 22: 3, 24: 2,
+                26: 1.5, 28: 1, 30: 0.8
+            };
+
+            // Populate wire properties table
+            const wirePropertiesTable = document.getElementById('wireProperties');
+            wireData.forEach(wire => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${wire.awg}</td>
+                    <td>${wire.diameter.toFixed(3)}</td>
+                    <td>${wire.area.toFixed(3)}</td>
+                    <td>${wire.resistance.toFixed(2)}</td>
+                `;
+                wirePropertiesTable.appendChild(row);
+            });
+
+            // Calculate button event
+            document.getElementById('calculate').addEventListener('click', function() {
+                const current = parseFloat(document.getElementById('current').value);
+                const temperature = parseFloat(document.getElementById('temperature').value);
+                const temperatureRise = parseFloat(document.getElementById('temperatureRise').value);
+                
+                if (isNaN(current) || current <= 0) {
+                    alert('Please enter a valid current value greater than 0.');
+                    return;
+                }
+
+                // Temperature correction factor for wires (simplified)
+                const tempFactor = Math.max(0.5, 1 - (Math.max(0, temperature - 25) / 100));
+                
+                // Calculate wire requirements
+                updateWireRequirements(current, tempFactor);
+                
+                // Calculate PCB trace requirements
+                updatePCBRequirements(current, temperatureRise);
+            });
+
+            function updateWireRequirements(current, tempFactor) {
+                const wireResults = document.getElementById('wireResults');
+                
+                // Clear previous results
+                wireResults.innerHTML = '';
+                
+                // Apply NEC standard
+                const necAwg = findMinimumAWG(current, necRatings, tempFactor);
+                const necRow = createWireResultRow('NEC (NFPA 70)', necAwg, necRatings[necAwg] * tempFactor, 
+                    `Temp. factor: ${tempFactor.toFixed(2)}`);
+                wireResults.appendChild(necRow);
+                
+                // Apply NASA standard
+                const nasaAwg = findMinimumAWG(current, nasaRatings, tempFactor);
+                const nasaRow = createWireResultRow('NASA (MIL-STD-975)', nasaAwg, nasaRatings[nasaAwg] * tempFactor, 
+                    'Space-rated, includes derating');
+                wireResults.appendChild(nasaRow);
+                
+                // Apply UL standard
+                const ulAwg = findMinimumAWG(current, ulRatings, tempFactor);
+                const ulRow = createWireResultRow('UL 758', ulAwg, ulRatings[ulAwg] * tempFactor, 
+                    'Appliance wiring material');
+                wireResults.appendChild(ulRow);
+                
+                // Highlight rows briefly to show update
+                highlightRows(wireResults.querySelectorAll('tr'));
+            }
+
+            function updatePCBRequirements(current, tempRise) {
+                const pcbResults = document.getElementById('pcbResults');
+                
+                // Clear previous results
+                pcbResults.innerHTML = '';
+                
+                // Constants for IPC-2221 formula: I = k × ΔT^0.44 × Area^0.725
+                // where k is a constant based on trace type
+                const kExternalUncoated = 0.048;
+                const kExternalCoated = 0.024;
+                const kInternal = 0.024;
+                
+                // Calculate trace width using IPC-2221 formula (rearranged)
+                // Width = (I / (k × ΔT^0.44 × thickness^0.725))^(1/0.725)
+                
+                // Assuming 1 oz/ft² copper thickness (35 μm or 0.035 mm)
+                const thickness = 0.035; // mm
+
+                // Calculate for external uncoated
+                const externalUncoatedWidth = calculateTraceWidth(current, kExternalUncoated, tempRise, thickness);
+                pcbResults.appendChild(createPCBResultRow('External (Uncoated)', externalUncoatedWidth));
+                
+                // Calculate for external coated
+                const externalCoatedWidth = calculateTraceWidth(current, kExternalCoated, tempRise, thickness);
+                pcbResults.appendChild(createPCBResultRow('External (Coated)', externalCoatedWidth));
+                
+                // Calculate for internal
+                const internalWidth = calculateTraceWidth(current, kInternal, tempRise, thickness);
+                pcbResults.appendChild(createPCBResultRow('Internal', internalWidth));
+                
+                // Update component lead spacing recommendation
+                document.getElementById('leadSpacing').textContent = 
+                    `${Math.max(10, current * 5).toFixed(1)} mil minimum`;
+                
+                document.getElementById('highCurrentSpacing').textContent = 
+                    `${Math.max(20, current * 8).toFixed(1)} mil minimum`;
+                
+                // Highlight rows briefly to show update
+                highlightRows(pcbResults.querySelectorAll('tr'));
+            }
+
+            function findMinimumAWG(current, ratings, tempFactor) {
+                // Find the minimum AWG that can handle the current
+                let awgValues = Object.keys(ratings).map(Number).sort((a, b) => a - b);
+                
+                for (let i = awgValues.length - 1; i >= 0; i--) {
+                    const awg = awgValues[i];
+                    if (ratings[awg] * tempFactor >= current) {
+                        return awg;
+                    }
+                }
+                
+                // If current exceeds capacity of smallest AWG, return that
+                return awgValues[0];
+            }
+
+            function createWireResultRow(standard, awg, rating, info) {
+                const row = document.createElement('tr');
+                row.className = 'result-row';
+                
+                // Find wire data
+                const wire = wireData.find(w => w.awg === awg);
+                
+                row.innerHTML = `
+                    <td>${standard}</td>
+                    <td class="highlight">${awg}</td>
+                    <td>${rating.toFixed(1)} A</td>
+                    <td>${info}</td>
+                `;
+                return row;
+            }
+
+            function calculateTraceWidth(current, k, tempRise, thickness) { 
+                // IPC-2221 formula: I = k × ΔT^0.44 × (Area)^0.725
+                // Area = Width × Thickness
+                // Rearranged for width: Width = (I / (k × ΔT^0.44 × thickness^0.725))^(1/0.725) / thickness
+                
+                // Calculate cross-sectional area in square mils
+                const tempRisePower = Math.pow(tempRise, 0.44);
+                const currentDivided = current / (k * tempRisePower);
+                const areaInSquareMils = Math.pow(currentDivided, 1/0.725);
+                
+                // Convert to square mm
+                const areaInSquareMm = areaInSquareMils * 0.000645;
+                
+                // Calculate width from area and thickness
+                const widthMm = areaInSquareMm / thickness;
+                const widthMil = widthMm / 0.0254;
+                
+                return {
+                    mil: widthMil,
+                    mm: widthMm,
+                    area: areaInSquareMm
+                };
+            }
+
+            function createPCBResultRow(type, width) {
+                const row = document.createElement('tr');
+                row.className = 'result-row';
+                
+                row.innerHTML = `
+                    <td>${type}</td>
+                    <td class="highlight">${width.mil.toFixed(2)}</td>
+                    <td>${width.mm.toFixed(4)}</td>
+                    <td>${width.area.toFixed(4)} mm²</td>
+                `;
+                return row;
+            }
+
+            function highlightRows(rows) {
+                rows.forEach(row => {
+                    row.classList.add('updated');
+                    setTimeout(() => {
+                        row.classList.remove('updated');
+                    }, 1000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
