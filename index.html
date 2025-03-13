@@ -5,154 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Engineering Toolkit (ETK)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --base03: #002b36;
-            --base02: #073642;
-            --base01: #586e75;
-            --base00: #657b83;
-            --base0: #839496;
-            --base1: #93a1a1;
-            --base2: #eee8d5;
-            --base3: #fdf6e3;
-            --yellow: #b58900;
-            --orange: #cb4b16;
-            --red: #dc322f;
-            --magenta: #d33682;
-            --violet: #6c71c4;
-            --blue: #268bd2;
-            --cyan: #2aa198;
-            --green: #859900;
-        }
-
-        body {
-            background-color: var(--base03);
-            color: var(--base1);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .navbar {
-            background-color: var(--base02);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .navbar-brand {
-            color: var(--cyan);
-            font-weight: bold;
-        }
-
-        .card {
-            background-color: var(--base02);
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-header {
-            background-color: var(--base02);
-            border-bottom: 2px solid var(--blue);
-            color: var(--blue);
-            font-weight: bold;
-        }
-
-        .form-control, .form-select {
-            background-color: var(--base03);
-            border: 1px solid var(--base01);
-            color: var(--base1);
-        }
-
-        .form-control:focus, .form-select:focus {
-            background-color: var(--base03);
-            border-color: var(--blue);
-            color: var(--base1);
-            box-shadow: 0 0 0 0.25rem rgba(38, 139, 210, 0.25);
-        }
-
-        .btn-primary {
-            background-color: var(--blue);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--violet);
-        }
-
-        table {
-            background-color: var(--base02);
-            color: var(--base1);
-            border-radius: 5px;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        th {
-            background-color: var(--base02);
-            color: var(--yellow);
-            font-weight: normal;
-            border-bottom: 1px solid var(--base01) !important;
-        }
-
-        td {
-            border-color: var(--base01) !important;
-        }
-
-        .highlight {
-            color: var(--cyan);
-            font-weight: bold;
-        }
-
-        .info-icon {
-            color: var(--blue);
-            cursor: help;
-        }
-
-        .temperature-adjustment {
-            color: var(--orange);
-        }
-
-        footer {
-            background-color: var(--base02);
-            color: var(--base00);
-            font-size: 0.8rem;
-            padding: 10px 0;
-            text-align: center;
-        }
-
-        .section-title {
-            color: var(--yellow);
-            border-bottom: 1px solid var(--base01);
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-
-        /* Table hover effect */
-        tbody tr:hover {
-            background-color: rgba(38, 139, 210, 0.1);
-        }
-
-        /* Input group styling */
-        .input-group-text {
-            background-color: var(--base02);
-            color: var(--blue);
-            border: 1px solid var(--base01);
-        }
-
-        .result-row {
-            transition: background-color 0.3s;
-        }
-        
-        .updated {
-            background-color: rgba(133, 153, 0, 0.2);
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -184,23 +37,23 @@
                         <h5 class="section-title">Enter Parameters</h5>
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label for="current" class="form-label">Current (Amperes)</label>
+                                <label for="current" class="form-label form-control-label">Current (Amperes)</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="current" placeholder="Enter current" step="0.1" min="0">
                                     <span class="input-group-text">A</span>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="temperature" class="form-label">Ambient Temperature (°C)</label>
+                                <label for="temperature" class="form-label form-control-label">Ambient Temperature (°C)</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="temperature" value="25" step="1">
                                     <span class="input-group-text">°C</span>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="temperatureRise" class="form-label">Max Temperature Rise (°C)</label>
+                                <label for="temperatureRise" class="form-label form-control-label">Max Temperature Rise (°C)</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="temperatureRise" value="10" step="1">
+                                    <input type="number" class="form-control" id="temperatureRise" value="30" step="1">
                                     <span class="input-group-text">°C</span>
                                 </div>
                             </div>
@@ -359,7 +212,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h6 class="section-title">Wire Selection Tips</h6>
-                                <ul>
+                                <ul class="form-control-label">
                                     <li>Always consider the environment (temperature, moisture, mechanical stress)</li>
                                     <li>For long runs, voltage drop becomes significant (consider upsizing)</li>
                                     <li>For aerospace/defense, use derating factors (typically 50%)</li>
@@ -368,7 +221,7 @@
                             </div>
                             <div class="col-md-6">
                                 <h6 class="section-title">PCB Design Tips</h6>
-                                <ul>
+                                <ul class="form-control-label">
                                     <li>Always consider thermal management for high current traces</li>
                                     <li>Use thermal relief connections to large copper areas</li>
                                     <li>For critical signals, apply controlled impedance design rules</li>
@@ -385,7 +238,7 @@
     <!-- Footer -->
     <footer class="mt-5">
         <div class="container">
-            <p>Engineering Toolkit (ETK) - For quick reference only. Always verify against required standards.</p>
+            <p>Engineering Toolkit (ETK) - For reference purposes only. Always verify against current standards.</p>
         </div>
     </footer>
 
